@@ -31,12 +31,18 @@ import com.projet.stock.domaine.Message;
 import com.projet.stock.config.JwtTokenUtil;
 import com.projet.stock.domaine.JwtResponse;
 import com.projet.stock.exception.ResourceNotFoundException;
+import com.projet.stock.model.Admin;
 import com.projet.stock.model.Expert;
 import com.projet.stock.model.Generaliste;
 import com.projet.stock.model.User;
+import com.projet.stock.repository.AdminRepository;
+import com.projet.stock.repository.ExpertRepository;
+import com.projet.stock.repository.GenRepository;
 import com.projet.stock.repository.UserRepository;
 import com.projet.stock.request.LoginRequest;
 import com.projet.stock.request.RegisterRequest;
+import com.projet.stock.request.RegisterRequestAdmin;
+import com.projet.stock.request.RegisterRequestExpert;
 import com.projet.stock.request.RegisterRequestGen;
 import com.projet.stock.services.UserDetailsImpl;
 
@@ -48,6 +54,11 @@ public class UserController {
 	@Autowired 	AuthenticationManager authenticationManager;
 
 	@Autowired	UserRepository userRepository;
+	
+	@Autowired	ExpertRepository expertRepository;
+	@Autowired	GenRepository genRepository;
+	@Autowired	AdminRepository adminRepository;
+
 
 	@Autowired	PasswordEncoder encoder;
 
@@ -70,14 +81,7 @@ public class UserController {
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur not found for this id : " + UtilisateurId));
 		return ResponseEntity.ok().body(Utilisateur);
 	}
-	@GetMapping("/image/{id}")
-	public String getimageById(@PathVariable(value = "id") long UtilisateurId)
-			throws ResourceNotFoundException {
-		User utilisateur = repository.findById(UtilisateurId).orElseThrow(() -> new ResourceNotFoundException("Utilisateur not found for this id : " + UtilisateurId));
-		return utilisateur.getImage();
-			//	utilisateur.getImage();
-				
-	}
+
 	//crud
 	 
 	
@@ -108,12 +112,12 @@ public class UserController {
 	
 
 	  @PutMapping("/users/{id}")
-	  public ResponseEntity<User> updateUtilisateur(@PathVariable("id") long id, @RequestBody User Utilisateur) {
+	  public ResponseEntity<User> updateUtilisateur(@PathVariable("id") long id, @RequestBody Expert Utilisateur) {
 	    System.out.println("Update Utilisateur with ID = " + id + "...");
 	 
-	    Optional<User> UtilisateurInfo = repository.findById(id);
+	    Optional<Expert> UtilisateurInfo = expertRepository.findById(id);
 
-	    	User utilisateur = UtilisateurInfo.get();
+	    	Expert utilisateur = UtilisateurInfo.get();
 	    	utilisateur.setTelephone(Utilisateur.getTelephone());
 	    	utilisateur.setGender(Utilisateur.getGender());
 	    	utilisateur.setImage(Utilisateur.getImage());       //  utilisateur.getEmail();
@@ -144,12 +148,12 @@ public class UserController {
 			return ResponseEntity.ok(new JwtResponse(jwt, 
 													 userDetails.getId(), 
 													 userDetails.getUsername(), 
-													 userDetails.getEmail(), 
-													 userDetails.getRole()));
+													 userDetails.getEmail()
+												));
 		}
 
-		@PostMapping("/users/signup")
-		public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequest signUpRequest) {
+		@PostMapping("/users/signupExpert")
+		public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequestExpert signUpRequest) {
 			if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 				return ResponseEntity
 						.badRequest()
@@ -166,16 +170,15 @@ public class UserController {
 			Expert user = new Expert(signUpRequest.getUsername(), 
 								 signUpRequest.getEmail(),
 								 encoder.encode(signUpRequest.getPassword()),
-										 signUpRequest.getRole(),
 										 signUpRequest.getGender(),
 										 signUpRequest.getTelephone(),
 										 signUpRequest.getImage());
-			userRepository.save(user);
+			expertRepository.save(user);
 
 			return ResponseEntity.ok(new Message("User registered successfully!"));
 		}	  
 		
-		@PostMapping("/users/signupExpert")
+		@PostMapping("/users/signupGen")
 		public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequestGen signUpRequest) {
 			if (userRepository.existsByUsername(signUpRequest.getUsername())) {
 				return ResponseEntity
@@ -193,14 +196,36 @@ public class UserController {
 			Generaliste user = new Generaliste(signUpRequest.getUsername(), 
 								 signUpRequest.getEmail(),
 								 encoder.encode(signUpRequest.getPassword()),
-										 signUpRequest.getRole(),
 										 signUpRequest.getGender(),
 										 signUpRequest.getTelephone(),
 										 signUpRequest.getImage());
-			userRepository.save(user);
+			genRepository.save(user);
 
 			return ResponseEntity.ok(new Message("User registered successfully!"));
 		}	  
 		
-	
+		@PostMapping("/users/signupAdmin")
+		public ResponseEntity<?> registerUser(@Valid @RequestBody RegisterRequestAdmin signUpRequest) {
+			if (userRepository.existsByUsername(signUpRequest.getUsername())) {
+				return ResponseEntity
+						.badRequest()
+						.body(new Message("Error: Username is already taken!"));
+			}
+
+			if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+				return ResponseEntity
+						.badRequest()
+						.body(new Message("Error: Email is already in use!"));
+			}
+
+			// Create new user's account
+			Admin user = new Admin(signUpRequest.getUsername(), 
+								 signUpRequest.getEmail(),
+								 encoder.encode(signUpRequest.getPassword()),
+										 signUpRequest.getImage());
+			adminRepository.save(user);
+
+			return ResponseEntity.ok(new Message("User registered successfully!"));
+		}	  
+		
 }

@@ -15,8 +15,8 @@ public class RegisterRequestGen {
 	    @Size(min=0 , max = 100)
 	    @Email
 	    private String email;
-	    @NotBlank
-	    private String role;
+	  //  @NotBlank
+	    //private String role;
 	    @NotBlank
 	    @Size( max = 10)
 	    private String password;
@@ -32,12 +32,12 @@ public class RegisterRequestGen {
 		public void setEmail(String email) {
 			this.email = email;
 		}
-		public String getRole() {
+	/*	public String getRole() {
 			return role;
 		}
 		public void setRole(String role) {
 			this.role = role;
-		}
+		}*/
 		public String getPassword() {
 			return password;
 		}

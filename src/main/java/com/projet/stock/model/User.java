@@ -26,10 +26,10 @@ public abstract class User {
 	  @Email
 	  private String email;
 	  private String password;
-	  private String gender ;
-	  private String image ; 
-	  private long telephone ; 
-	  private String role;
+	//  private String gender ;
+	 private String image ; 
+//	  private long telephone ; 
+	//  private String role;
 	 
 	 
 	public long getId() {
@@ -38,36 +38,36 @@ public abstract class User {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public String getGender() {
+	/*public String getGender() {
 		return gender;
-	}
-	public void setGender(String gender) {
+	}*/
+	/*public void setGender(String gender) {
 		this.gender = gender;
-	}
-	public String getImage() {
+	}*/
+/*	public String getImage() {
 		return image;
-	}
-	public void setTelephone(long telephone) {
+	}*/
+/*	public void setTelephone(long telephone) {
 		this.telephone = telephone;
-	}
+	}*/
 	public String getEmail() {
 		return email;
 	}
-	public void setImage(String image) {
+/*	public void setImage(String image) {
 		this.image = image;
-	}
-	public long getTelephone() {
+	}*/
+	/*public long getTelephone() {
 		return telephone;
-	}
+	}*/
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public String getRole() {
+/*	public String getRole() {
 		return role;
 	}
 	public void setRole(String role) {
 		this.role = role;
-	}
+	}*/
 	public String getUsername() {
 		return username;
 	}
@@ -82,17 +82,24 @@ public abstract class User {
 	}
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", role=" + role + ", username=" + username + ", password="
+		return "User [id=" + id + ", email=" + email  + ", username=" + username + ", password="
 				+ password + "]";
 	}
-	public User(String username, String email, String password, String role , String gender , String image , long telephone ) {
+	public User(String username, String email, String password  , String image  ) {
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.role = role;
+	//	this.role = role;
+		
 		this.image = image;
-		this.gender = gender;
-		this.telephone = telephone;
+	//	this.gender = gender;
+		//this.telephone = telephone;
+	}
+	public String getImage() {
+		return image;
+	}
+	public void setImage(String image) {
+		this.image = image;
 	}
 	public User() {
 		super();

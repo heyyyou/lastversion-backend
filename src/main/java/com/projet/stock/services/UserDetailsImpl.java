@@ -11,8 +11,8 @@ public class UserDetailsImpl implements UserDetails {
 	private Long id;
 	private String username;
 	private String email;
-	private String gender ; 
-	private long telephone ; 
+	//private String gender ; 
+	//private long telephone ; 
 	private String image ;
 	private String role;
 	@JsonIgnore
@@ -21,12 +21,12 @@ public class UserDetailsImpl implements UserDetails {
 	  private Collection<? extends GrantedAuthority> authorities;
 
 	public UserDetailsImpl(Long id, String username, String email, String password
-			/*,String gender , String image , long telephone*/ , String role) {
+			/*,String gender , String image , long telephone*/ ) {
 		this.id = id;
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.role     = role;
+		//this.role     = role;
 	}
 
 	public static UserDetailsImpl build(User user) {
@@ -35,8 +35,8 @@ public class UserDetailsImpl implements UserDetails {
 				user.getId(), 
 				user.getUsername(), 
 				user.getEmail(),
-				user.getPassword(),
-				user.getRole()
+				user.getPassword()
+				
 				/*user.getGender(),
 				user.getTelephone(),
 				user.getImage()*/
@@ -64,27 +64,27 @@ public class UserDetailsImpl implements UserDetails {
 	public boolean isAccountNonLocked() {
 		return true;
 	}
-	public String getGender() {
+/*	public String getGender() {
 		return gender;
-	}
-	public void setGender(String gender) {
+	}*/
+	/*public void setGender(String gender) {
 		this.gender = gender;
-	}
+	}*/
 	public String getImage() {
 		return image;
 	}
-	public void setTelephone(long telephone) {
-		this.telephone = telephone;
-	}
+	//public void setTelephone(long telephone) {
+		//this.telephone = telephone;
+	//}
 	public String getEmail() {
 		return email;
 	}
 	public void setImage(String image) {
 		this.image = image;
 	}
-	public long getTelephone() {
-		return telephone;
-	}
+//	public long getTelephone() {
+	//	return telephone;
+	//}
 
 	@Override
 	public boolean isCredentialsNonExpired() {

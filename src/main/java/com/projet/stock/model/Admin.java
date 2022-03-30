@@ -5,88 +5,60 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
 @Entity
-@Table(name = "Utilisateur",
-uniqueConstraints = { 
-		@UniqueConstraint(columnNames = "username"
-				+ ""),
-		@UniqueConstraint(columnNames = "email") 
-	})
-public class Admin{
-	@Id
-	  @GeneratedValue(strategy = GenerationType.AUTO)
-	  private long id;
-	  @NotBlank
-		@Size(max = 100)
-	  private String username;
-	  @NotBlank
-	  @Size(max = 100)
-	  @Email
-	  private String email;
-	  private String password;
+@DiscriminatorValue(value="Admin")
+public class Admin extends User {
 	
-	  private String image ; 
-	  private String role;
-	 
-	 
-	public long getId() {
-		return id;
-	}
-	public void setId(long id) {
-		this.id = id;
+	public Admin(String username, String email, String password  , String image) {
+		super( username,  email,  password ,  image);
 	}
 	
-	public String getEmail() {
-		return email;
-	}
-	public void setImage(String image) {
-		this.image = image;
-	}
 	
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getRole() {
-		return role;
-	}
-	public void setRole(String role) {
-		this.role = role;
-	}
-	public String getUsername() {
-		return username;
-	}
-	public void setUsername(String username) {
-		this.username = username;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", email=" + email + ", role=" + role + ", username=" + username + ", password="
-				+ password + "]";
-	}
-	public Admin(String username, String email, String password, String role , String image  ) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.role = role;		this.image = image;
-		
-	}
-	public String getImage() {
-		return image;
-	}
+	
 	public Admin() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
+	
 
+	
+	public String getUsername(){
+		return super.getUsername();
+	}
+	
+
+	public void setUsername(){
+		 super.setUsername(super.getUsername());
+		 
+	}
+	public String getEmail(){
+		return super.getEmail();
+	}
+	
+
+	public void setEmail(){
+		 super.setEmail(super.getEmail());
+	}
+	
+	
+	public String getUPassword(){
+		return super.getPassword();
+	}
+	
+
+	public void setPassword(){
+		 super.setPassword(super.getPassword());
+	}
+	
+	
+	
+	public String getImage(){
+		return super.getImage();
+	}
+	
+
+	public void setImage(){
+		 super.setImage(super.getImage());
+	}
+	
+	
 }
