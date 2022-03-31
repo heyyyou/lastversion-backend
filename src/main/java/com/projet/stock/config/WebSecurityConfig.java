@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 			.authorizeRequests().antMatchers("/api/users/login").permitAll().antMatchers("/api/users/signupGen").permitAll().antMatchers("/api/users/signupExpert").permitAll().antMatchers("/api/users/signupAdmin").permitAll()
-			.antMatchers("/api/test/**").permitAll()
+			.antMatchers("/api/test/**").permitAll().antMatchers("/api/addP").permitAll()
 			
 			.anyRequest().authenticated();
 

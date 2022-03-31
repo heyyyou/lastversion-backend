@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,6 +44,7 @@ import com.projet.stock.request.RegisterRequest;
 import com.projet.stock.request.RegisterRequestAdmin;
 import com.projet.stock.request.RegisterRequestExpert;
 import com.projet.stock.request.RegisterRequestGen;
+import com.projet.stock.services.ProductService;
 import com.projet.stock.services.UserDetailsImpl;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -58,7 +59,8 @@ public class UserController {
 	@Autowired	ExpertRepository expertRepository;
 	@Autowired	GenRepository genRepository;
 	@Autowired	AdminRepository adminRepository;
-
+	@Autowired
+	private ProductService productService;
 
 	@Autowired	PasswordEncoder encoder;
 
@@ -74,10 +76,17 @@ public class UserController {
 	    return Utilisateur;	
 	  }
 	
-	@GetMapping("/users/{id}")
-	public ResponseEntity<User> getUtilisateurById(@PathVariable(value = "id") long UtilisateurId)
+	@GetMapping("/generaliste/{id}")
+	public ResponseEntity<Generaliste> getGenById(@PathVariable(value = "id") long UtilisateurId)
 			throws ResourceNotFoundException {
-		User Utilisateur = repository.findById(UtilisateurId)
+		Generaliste Utilisateur = genRepository.findById(UtilisateurId)
+				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur not found for this id : " + UtilisateurId));
+		return ResponseEntity.ok().body(Utilisateur);
+	}
+	@GetMapping("/expert/{id}")
+	public ResponseEntity<Expert> getExpertById(@PathVariable(value = "id") long UtilisateurId)
+			throws ResourceNotFoundException {
+Expert Utilisateur = expertRepository.findById(UtilisateurId)
 				.orElseThrow(() -> new ResourceNotFoundException("Utilisateur not found for this id : " + UtilisateurId));
 		return ResponseEntity.ok().body(Utilisateur);
 	}
@@ -111,8 +120,23 @@ public class UserController {
 	 
 	
 
-	  @PutMapping("/users/{id}")
-	  public ResponseEntity<User> updateUtilisateur(@PathVariable("id") long id, @RequestBody Expert Utilisateur) {
+	  @PutMapping("/Generaliste/{id}")
+	  public ResponseEntity<Generaliste> updateGeneraliste(@PathVariable("id") long id, @RequestBody Generaliste Utilisateur) {
+	    System.out.println("Update Utilisateur with ID = " + id + "...");
+	 
+	    Optional<Generaliste> UtilisateurInfo = genRepository.findById(id);
+
+	    	Generaliste utilisateur = UtilisateurInfo.get();
+	    	utilisateur.setTelephone(Utilisateur.getTelephone());
+	    	utilisateur.setGender(Utilisateur.getGender());
+	    	utilisateur.setImage(Utilisateur.getImage());       //  utilisateur.getEmail();
+	        // utilisateur.getUsername();
+	    	
+	      return new ResponseEntity<>(repository.save(utilisateur), HttpStatus.OK);
+	    } 
+	  
+	  @PutMapping("/expert/{id}")
+	  public ResponseEntity<Expert> updateExpert(@PathVariable("id") long id, @RequestBody Expert Utilisateur) {
 	    System.out.println("Update Utilisateur with ID = " + id + "...");
 	 
 	    Optional<Expert> UtilisateurInfo = expertRepository.findById(id);
@@ -125,6 +149,11 @@ public class UserController {
 	    	
 	      return new ResponseEntity<>(repository.save(utilisateur), HttpStatus.OK);
 	    } 
+	  
+	  
+	  
+	  
+	  
 	  
 	  
 	
@@ -227,5 +256,16 @@ public class UserController {
 
 			return ResponseEntity.ok(new Message("User registered successfully!"));
 		}	  
+		
+		// rahy bsh twali put ll lokhrina update prodil expert et medecin 
+	    @PostMapping("/addP")
+	    public String saveProduct(@RequestParam("file") MultipartFile file,
+	    		@RequestParam("pname") String name,
+	    		@RequestParam("price") int price,
+	    		@RequestParam("desc") String desc)
+	    {
+	    	productService.saveProductToDB(file, name, desc, price);
+	    	return "redirect:/listProducts.html";
+	    }
 		
 }

@@ -6,7 +6,52 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue(value="generaliste")
 public class Generaliste extends User {
-	 private String gender ;
+	 public String getGender() {
+		return gender;
+	}
+
+
+
+
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+
+
+
+
+	public String getImage() {
+		return image;
+	}
+
+
+
+
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+
+
+
+
+
+	public long getTelephone() {
+		return telephone;
+	}
+
+
+
+
+
+	public void setTelephone(long telephone) {
+		this.telephone = telephone;
+	}
+
+
+	private String gender ;
 	  private String image ; 
 	  private long telephone ;
 	
